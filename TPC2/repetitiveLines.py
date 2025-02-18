@@ -8,11 +8,10 @@ def remove_repetitive_lines_from_stream(input_stream, output_file, keep_spaces, 
             stripped_line = line.rstrip('\n')
             if not keep_spaces:
                 stripped_line = stripped_line.strip()
-            if stripped_line not in seen_lines:
-                if comment_empty and stripped_line == '':
-                    outfile.write('#\n')
-                else:
-                    outfile.write(line)
+            if stripped_line == '' and comment_empty:
+                outfile.write('#\n')
+            elif stripped_line not in seen_lines:
+                outfile.write(line)
                 seen_lines.add(stripped_line)
 
 def main():
