@@ -1,0 +1,9 @@
+[project]
+name = "repetitiveLines"
+version = "0.1.0"
+authors = [{name = "João Coelho", email = "jojocoelho3@gmail.com"}]
+description = "Remove duplicate lines from a file"
+dependencies = ["argparse"]
+
+[project.scripts]
+rl = "repetitiveLines:main"
