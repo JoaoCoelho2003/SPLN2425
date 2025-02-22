@@ -2,23 +2,24 @@ import re
 import jjcli
 from collections import Counter
 
-# TODO - frequencias relativas (apareceu 10 vezes em 10 milhoes de palavras p.e.) ... outro ficheiro chamado calculador para somar/subtrair frequências
-
 def lexer(txt):
     return re.findall(r'\w+(?:-\w+)*|[^\w\s]+', txt)
 
 def counter(tokens):
-    return Counter(*tokens)
-    
+    total_tokens = sum(tokens.values())
+    relative_freq = {word: (count, count / total_tokens) for word, count in tokens.items()}
+    return relative_freq
+
 def main():
     cl = jjcli.clfilter()
     tokens = []
     for txt in cl.text():
         t = lexer(txt)
         print(t)
-        tokens.append(t)
-    c = counter(tokens)
-    print(c)
+        tokens.extend(t)
+    c = Counter(tokens)
+    relative_frequencies = counter(c)
+    print(relative_frequencies)
         
 if __name__ == "__main__":
     main()

@@ -8,3 +8,4 @@ license = { text = "MIT" }
 
 [project.scripts]
 ftk-occ = "ftk.base:main"
+ftk-freq = "ftk.freq:main"
