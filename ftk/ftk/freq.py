@@ -1,39 +1,41 @@
-import sys
 import re
+import jjcli
 from collections import Counter
+from ftk.base import lexer, pretty_print, counter
 
-def lexer(txt):
-    return re.findall(r'\w+(?:-\w+)*|[^\w\s]+', txt)
-
-def counter(tokens):
-    total_tokens = sum(tokens.values())
-    return {word: (count, count / total_tokens) for word, count in tokens.items()} if total_tokens > 0 else {}
+def ratio(relative_freq1, relative_freq2):
+    result = {}
+    r2 = dict(relative_freq2)
+    for word, count in relative_freq1:
+        result[word] = count / r2.get(word, 1/1000000)
+    return result
 
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "sub"}:
-        print("Usage: ftk-freq <add|sub>")
-        sys.exit(1)
-
-    operation = sys.argv[1]
-    combined_freq = Counter()
-
-    try:
-        for line in sys.stdin:
-            tokens = lexer(line)
-            token_counts = Counter(tokens)
-
-            if operation == "add":
-                combined_freq += token_counts
-            elif operation == "sub":
-                combined_freq -= token_counts
-
-    except KeyboardInterrupt:
-        pass
-
-    combined_freq = Counter({word: max(0, count) for word, count in combined_freq.items()})
-
-    relative_frequencies = counter(combined_freq)
-    print(relative_frequencies)
-
+    """
+    ftk-ratio
+    """
+    cl = jjcli.clfilter("am:", doc=main.__doc__)
+    tokens1 = []
+    tokens2 = []
+    for i, arg in enumerate(cl.args):
+        with open(arg, 'r') as file:
+            txt = file.read()
+            t = lexer(txt)
+            if i == 0:
+                tokens1.extend(t)
+            else:
+                tokens2.extend(t)
+    c1 = Counter(tokens1)
+    c2 = Counter(tokens2)
+    
+    relative_frequencies1 = counter(c1)
+    relative_frequencies2 = counter(c2)
+    
+    ratio_frequencies = ratio(relative_frequencies1, relative_frequencies2)
+    
+    print(ratio_frequencies)
+    
+    #TODO clean the list of words from the portuguese corpus file (<2 frequency), implement flag -p (compare with this corpus file)
+        
 if __name__ == "__main__":
     main()
