@@ -1,0 +1,11 @@
+[project]
+name = "ftk"
+version = "0.1.0"
+authors = [{ name = "João Coelho", email = "jojocoelho3@gmail.com" }]
+description = "Calculate relative frequencies and probabilities for text analysis"
+license = { text = "MIT" }
+dependencies = ["jjcli"]
+
+[project.scripts]
+ftk-occ = "ftk.mains:main"
+ftk-razoes = "ftk.mains:main_razoes"
